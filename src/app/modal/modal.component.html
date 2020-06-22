@@ -1,0 +1,110 @@
+
+<mat-dialog-content>
+  <p mat-dialog-title>Create filter</p>
+
+  <mat-form-field>
+
+    <mat-label>Filter title (required)</mat-label>
+    <input #inputTitle [(ngModel)]="filterCollection.title" matInput maxlength="100">
+
+    <button (click)="filterCollection.title = ''" aria-label="Clear" class="size25" mat-button mat-icon-button
+      matSuffix>
+      <mat-icon>clear</mat-icon>
+    </button>
+
+  </mat-form-field>
+
+  <mat-divider></mat-divider>
+
+  <div class="form-row" *ngFor="let filter of filterCollection.filters; let idx = index">
+
+    <mat-form-field>
+      <mat-label>Filter type</mat-label>
+      <mat-select [(value)]="filter.type">
+        <mat-option *ngFor="let type of types" value={{type.id}}>{{type.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Compare option</mat-label>
+      <mat-select [(value)]="filter.comparator">
+        <mat-option value="0">--Select--</mat-option>
+        <mat-option *ngFor="let comp of onSelectType(+filter.type)" value={{comp.id}}>{{comp.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div *ngIf="filter.type < 3">
+      <mat-form-field>
+        <mat-label>Value</mat-label>
+        <input type="text" class="form-control" [(ngModel)]="filter.value" name="value{{idx}}" matInput>
+      </mat-form-field>
+    </div>
+
+    <div *ngIf="filter.type > 2">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Date"
+          #inputDate
+          readonly="true"
+          [matDatepicker]="picker"
+          [(ngModel)]="filter.value"
+          (click)="picker.open()"
+        >
+    
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+    
+        <mat-datepicker #picker></mat-datepicker>
+    
+        <button
+          *ngIf="inputDate.value.trim().length > 0"
+          mat-button
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          (click)="filter.value = null"
+          class="size25"
+        >
+          <mat-icon>clear</mat-icon>
+    
+        </button>
+      </mat-form-field>
+
+    </div>
+
+    <div class="btn btn-danger" *ngIf="idx != 0">
+      <button mat-raised-button color="warn" (click)="removeForm(idx)">Remove</button>
+    </div>
+
+  </div>
+
+
+</mat-dialog-content>
+
+<div *ngIf="saveSuccess">
+  <p class="success">Filter Saved</p>
+</div>
+
+<mat-dialog-actions>
+  <div class="col-md-5 col-12">
+
+    <button mat-raised-button color="primary" (click)="addForm()" [disabled]="inputTitle.value.trim().length==0">
+      Add Form
+    </button>
+  </div>
+
+  <div class="text-right">
+
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="inputTitle.value.trim().length==0">
+      Save
+    </button>
+
+    <button mat-raised-button (click)="onCancel()">
+      Close
+    </button>
+
+  </div>
+</mat-dialog-actions>

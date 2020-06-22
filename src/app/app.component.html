@@ -1,0 +1,24 @@
+<main id="filter-button-holder">
+  <div class="button-row">
+    <button mat-raised-button color="accent" id="filter-button" (click)="openModal(null)">Add Filter</button>
+
+  </div>
+
+  <br>
+  <br>
+
+  <div>
+    <div *ngFor="let f of filterCollections">
+      {{f.title}}
+      <div>
+        <button mat-icon-button class="edit-icon" (click)="openModal(f)">
+          <mat-icon aria-hidden="false">edit</mat-icon>
+        </button>
+
+        <button mat-icon-button class="delete-icon" (click)="openDeleteDialog(f)">
+          <mat-icon aria-hidden="false">delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
